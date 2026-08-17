@@ -1,7 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
-
+const { User, Role } = require("../models/associations");
 const registerUser = async (userData) => {
     const { name, email, password } = userData;
 
@@ -27,8 +26,12 @@ const registerUser = async (userData) => {
 
 const loginUser = async (email, password) => {
     const user = await User.findOne({
-        where: { email }
-    });
+    where: { email },
+    include: {
+        model: Role,
+        attributes: ["id", "name"]
+    }
+});
 
     if (!user) {
         throw new Error("Invalid email or password");
@@ -43,7 +46,7 @@ const loginUser = async (email, password) => {
     const token = jwt.sign(
     {
         userId: user.id,
-        roleId: user.roleId
+        role: user.Role.name
     },
     process.env.JWT_SECRET,
     {

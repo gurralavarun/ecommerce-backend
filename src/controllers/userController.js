@@ -5,6 +5,14 @@ const getProfile = async (req, res) => {
     });
 };
 
+const getAdminTest = async (req, res) => {
+    res.status(200).json({
+        message: "Admin access granted",
+        user: req.user
+    });
+};
+
 module.exports = {
-    getProfile
+    getProfile,
+    getAdminTest
 };
