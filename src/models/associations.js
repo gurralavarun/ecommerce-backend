@@ -4,6 +4,7 @@ const Category = require("./Category");
 const Product = require("./Product");
 const Cart = require("./Cart");
 const CartItem = require("./CartItem");
+const WishlistItem = require("./WishlistItem");
 
 Role.hasMany(User, {
     foreignKey: "roleId"
@@ -45,11 +46,28 @@ CartItem.belongsTo(Product, {
     foreignKey: "productId"
 });
 
+User.hasMany(WishlistItem, {
+    foreignKey: "userId"
+});
+
+WishlistItem.belongsTo(User, {
+    foreignKey: "userId"
+});
+
+Product.hasMany(WishlistItem, {
+    foreignKey: "productId"
+});
+
+WishlistItem.belongsTo(Product, {
+    foreignKey: "productId"
+});
+
 module.exports = {
     Role,
     User,
     Category,
     Product,
     Cart,
-    CartItem
+    CartItem,
+    WishlistItem
 };

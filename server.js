@@ -9,9 +9,9 @@ const {
     Category,
     Product,
     Cart,
-    CartItem
+    CartItem,
+    WishlistItem
 } = require("./src/models/associations");
-
 const seedRoles = require("./src/config/seedRoles");
 
 const authRoutes = require("./src/routes/authRoutes");
@@ -19,6 +19,7 @@ const userRoutes = require("./src/routes/userRoutes");
 const categoryRoutes = require("./src/routes/categoryRoutes");
 const productRoutes = require("./src/routes/productRoutes");
 const cartRoutes = require("./src/routes/cartRoutes");
+const wishlistRoutes = require("./src/routes/wishlistRoutes");
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/wishlist", wishlistRoutes);
 
 const PORT = process.env.PORT || 5000;
 
