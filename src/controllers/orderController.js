@@ -50,6 +50,24 @@ const getOrderById = async (req, res) => {
     }
 };
 
+const cancelOrder = async (req, res) => {
+    try {
+        const order = await orderService.cancelOrder(
+            req.user.userId,
+            req.params.id
+        );
+
+        res.status(200).json({
+            message: "Order cancelled successfully",
+            order
+        });
+    } catch (error) {
+        res.status(400).json({
+            message: error.message
+        });
+    }
+};
+
 const updateOrderStatus = async (req, res) => {
     try {
         const order = await orderService.updateOrderStatus(
@@ -72,5 +90,6 @@ module.exports = {
     createOrder,
     getUserOrders,
     getOrderById,
+    cancelOrder,
     updateOrderStatus
 };

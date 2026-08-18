@@ -44,6 +44,25 @@ const updateProduct = async (req, res) => {
     }
 };
 
+const getLowStockProducts = async (req, res) => {
+    try {
+        const products = await productService.getLowStockProducts(
+            req.query.threshold
+        );
+
+        res.status(200).json({
+            threshold: req.query.threshold
+                ? Number(req.query.threshold)
+                : 5,
+            products
+        });
+    } catch (error) {
+        res.status(400).json({
+            message: error.message
+        });
+    }
+};
+
 const deleteProduct = async (req, res) => {
     try {
         await productService.deleteProduct(req.params.id);
@@ -61,6 +80,7 @@ const deleteProduct = async (req, res) => {
 module.exports = {
     createProduct,
     getAllProducts,
+    getLowStockProducts,
     updateProduct,
     deleteProduct
 };

@@ -2,6 +2,8 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./src/config/swagger");
 const sequelize = require("./src/config/database");
 
 const {
@@ -18,6 +20,7 @@ const {
 } = require("./src/models/associations");
 const seedRoles = require("./src/config/seedRoles");
 
+const errorHandler = require("./src/middleware/errorHandler");
 const authRoutes = require("./src/routes/authRoutes");
 const userRoutes = require("./src/routes/userRoutes");
 const categoryRoutes = require("./src/routes/categoryRoutes");
@@ -32,6 +35,12 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.use(
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec)
+);
+
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/categories", categoryRoutes);
@@ -40,6 +49,8 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payments", paymentRoutes);
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 

@@ -51,8 +51,24 @@ const removeFromWishlist = async (req, res) => {
     }
 };
 
+const checkWishlist = async (req, res) => {
+    try {
+        const result = await wishlistService.checkWishlist(
+            req.user.userId,
+            req.params.productId
+        );
+
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(400).json({
+            message: error.message
+        });
+    }
+};
+
 module.exports = {
     addToWishlist,
     getWishlist,
-    removeFromWishlist
+    removeFromWishlist,
+    checkWishlist
 };

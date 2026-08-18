@@ -116,11 +116,73 @@ const getOrderById = async (userId, orderId) => {
         }
     });
 
+
+
     if (!order) {
         throw new Error("Order not found");
     }
 
     return order;
+};
+
+const cancelOrder = async (userId, orderId) => {
+    const transaction = await sequelize.transaction();
+
+    try {
+        const order = await Order.findOne({
+            where: {
+                id: orderId,
+                userId
+            },
+            include: {
+                model: OrderItem
+            },
+            transaction
+        });
+
+        if (!order) {
+            throw new Error("Order not found");
+        }
+
+        if (!["PENDING", "CONFIRMED"].includes(order.status)) {
+            throw new Error(
+                "Order cannot be cancelled at this stage"
+            );
+        }
+
+        for (const orderItem of order.OrderItems) {
+            const product = await Product.findByPk(
+                orderItem.productId,
+                { transaction }
+            );
+
+            if (product) {
+                await product.update(
+                    {
+                        stock:
+                            product.stock +
+                            orderItem.quantity
+                    },
+                    { transaction }
+                );
+            }
+        }
+
+        await order.update(
+            {
+                status: "CANCELLED"
+            },
+            { transaction }
+        );
+
+        await transaction.commit();
+
+        return order;
+
+    } catch (error) {
+        await transaction.rollback();
+        throw error;
+    }
 };
 
 const updateOrderStatus = async (orderId, status) => {
@@ -153,5 +215,6 @@ module.exports = {
     createOrder,
     getUserOrders,
     getOrderById,
+    cancelOrder,
     updateOrderStatus
 };

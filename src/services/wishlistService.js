@@ -53,8 +53,22 @@ const removeFromWishlist = async (userId, productId) => {
     await item.destroy();
 };
 
+const checkWishlist = async (userId, productId) => {
+    const item = await WishlistItem.findOne({
+        where: {
+            userId,
+            productId
+        }
+    });
+
+    return {
+        inWishlist: !!item
+    };
+};
+
 module.exports = {
     addToWishlist,
     getWishlist,
-    removeFromWishlist
+    removeFromWishlist,
+    checkWishlist
 };

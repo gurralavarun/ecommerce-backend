@@ -121,6 +121,27 @@ const updateProduct = async (id, productData) => {
     return product;
 };
 
+const getLowStockProducts = async (threshold = 5) => {
+    threshold = Number(threshold);
+
+    if (!Number.isInteger(threshold) || threshold < 0) {
+        throw new Error("Threshold must be a non-negative integer");
+    }
+
+    return await Product.findAll({
+        where: {
+            stock: {
+                [Op.lte]: threshold
+            }
+        },
+        include: {
+            model: Category,
+            attributes: ["id", "name"]
+        },
+        order: [["stock", "ASC"]]
+    });
+};
+
 const deleteProduct = async (id) => {
     const product = await Product.findByPk(id);
 
@@ -135,5 +156,6 @@ module.exports = {
     createProduct,
     getAllProducts,
     updateProduct,
+    getLowStockProducts,
     deleteProduct
 };

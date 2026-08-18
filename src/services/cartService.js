@@ -166,9 +166,30 @@ const removeCartItem = async (userId, cartItemId) => {
     await cartItem.destroy();
 };
 
+const clearCart = async (userId) => {
+    const cart = await Cart.findOne({
+        where: { userId }
+    });
+
+    if (!cart) {
+        throw new Error("Cart not found");
+    }
+
+    await CartItem.destroy({
+        where: {
+            cartId: cart.id
+        }
+    });
+
+    return {
+        message: "Cart cleared successfully"
+    };
+};
+
 module.exports = {
     addToCart,
     getCart,
     updateCartItem,
-    removeCartItem
+    removeCartItem,
+    clearCart
 };

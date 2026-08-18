@@ -71,9 +71,24 @@ const removeCartItem = async (req, res) => {
     }
 };
 
+const clearCart = async (req, res) => {
+    try {
+        const result = await cartService.clearCart(
+            req.user.userId
+        );
+
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(404).json({
+            message: error.message
+        });
+    }
+};
+
 module.exports = {
     addToCart,
     getCart,
     updateCartItem,
-    removeCartItem
+    removeCartItem,
+    clearCart
 };
