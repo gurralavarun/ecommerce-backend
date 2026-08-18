@@ -2,15 +2,21 @@ require("dotenv").config();
 
 const express = require("express");
 const sequelize = require("./src/config/database");
-const { Role, User } = require("./src/models/associations");
-const seedRoles = require("./src/config/seedRoles");
+const {
+    Role,
+    User,
+    Category,
+    Product
+} = require("./src/models/associations");const seedRoles = require("./src/config/seedRoles");
 const authRoutes = require("./src/routes/authRoutes");
 const userRoutes = require("./src/routes/userRoutes");
+const categoryRoutes = require("./src/routes/categoryRoutes");
 
 const app = express();
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/categories", categoryRoutes);
 
 const PORT = process.env.PORT || 5000;
 
