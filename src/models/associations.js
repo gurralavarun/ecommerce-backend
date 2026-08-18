@@ -5,6 +5,9 @@ const Product = require("./Product");
 const Cart = require("./Cart");
 const CartItem = require("./CartItem");
 const WishlistItem = require("./WishlistItem");
+const Order = require("./Order");
+const OrderItem = require("./OrderItem");
+const Payment = require("./Payment");
 
 Role.hasMany(User, {
     foreignKey: "roleId"
@@ -62,6 +65,38 @@ WishlistItem.belongsTo(Product, {
     foreignKey: "productId"
 });
 
+User.hasMany(Order, {
+    foreignKey: "userId"
+});
+
+Order.belongsTo(User, {
+    foreignKey: "userId"
+});
+
+Order.hasMany(OrderItem, {
+    foreignKey: "orderId"
+});
+
+OrderItem.belongsTo(Order, {
+    foreignKey: "orderId"
+});
+
+Product.hasMany(OrderItem, {
+    foreignKey: "productId"
+});
+
+OrderItem.belongsTo(Product, {
+    foreignKey: "productId"
+});
+
+Order.hasOne(Payment, {
+    foreignKey: "orderId"
+});
+
+Payment.belongsTo(Order, {
+    foreignKey: "orderId"
+});
+
 module.exports = {
     Role,
     User,
@@ -69,5 +104,8 @@ module.exports = {
     Product,
     Cart,
     CartItem,
-    WishlistItem
+    WishlistItem,
+    Order,
+    OrderItem,
+    Payment
 };
