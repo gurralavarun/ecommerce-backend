@@ -3,24 +3,16 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
+
 const swaggerSpec = require("./src/config/swagger");
 const sequelize = require("./src/config/database");
 
-const {
-    Role,
-    User,
-    Category,
-    Product,
-    Cart,
-    CartItem,
-    WishlistItem,
-    Order,
-    OrderItem,
-    Payment
-} = require("./src/models/associations");
 const seedRoles = require("./src/config/seedRoles");
 
+require("./src/models/associations");
+
 const errorHandler = require("./src/middleware/errorHandler");
+
 const authRoutes = require("./src/routes/authRoutes");
 const userRoutes = require("./src/routes/userRoutes");
 const categoryRoutes = require("./src/routes/categoryRoutes");
@@ -33,6 +25,7 @@ const paymentRoutes = require("./src/routes/paymentRoutes");
 const app = express();
 
 app.use(express.json());
+
 app.use(cors());
 
 app.use(
@@ -50,28 +43,40 @@ app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payments", paymentRoutes);
 
-app.use(errorHandler);
-
-const PORT = process.env.PORT || 5000;
-
 app.get("/", (req, res) => {
-    res.json({
+    res.status(200).json({
         message: "E-Commerce Backend API is running"
     });
 });
 
-app.listen(PORT, async () => {
-    console.log(`Server running on port ${PORT}`);
+app.use(errorHandler);
 
+const PORT = process.env.PORT || 5000;
+
+const startServer = async () => {
     try {
         await sequelize.authenticate();
+
         console.log("MySQL database connected successfully");
 
         await sequelize.sync();
+
         console.log("Database tables synchronized");
 
         await seedRoles();
+
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+
     } catch (error) {
-        console.error("Database connection failed:", error.message);
+        console.error(
+            "Unable to start server:",
+            error.message
+        );
+
+        process.exit(1);
     }
-});
+};
+
+startServer();
