@@ -4,6 +4,7 @@
   "description": "E-commerce Backend API",
   "main": "server.js",
   "scripts": {
+    "seed:catalog": "node scripts/seedCatalog.js",
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
