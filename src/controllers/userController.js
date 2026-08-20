@@ -1,10 +1,20 @@
 const userService = require("../services/userService");
 
 const getProfile = async (req, res) => {
-    res.status(200).json({
-        message: "Profile accessed successfully",
-        user: req.user
-    });
+    try {
+        const userId = req.user.userId;
+
+        const user = await userService.getProfile(userId);
+
+        res.status(200).json({
+            message: "Profile retrieved successfully",
+            user
+        });
+    } catch (error) {
+        res.status(404).json({
+            message: error.message
+        });
+    }
 };
 
 const getAdminTest = async (req, res) => {

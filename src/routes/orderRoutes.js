@@ -13,6 +13,7 @@ const {
 const {
     createOrder,
     getUserOrders,
+    getAllOrders,
     getOrderById,
     cancelOrder,
     updateOrderStatus
@@ -53,6 +54,30 @@ router.post(
  * @swagger
  * /api/orders:
  *   get:
+ *     summary: Get all orders
+ *     description: Admin only. Returns all customer orders with customer details.
+ *     tags: [Orders]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: All orders retrieved successfully
+ *       401:
+ *         description: Authentication required
+ *       403:
+ *         description: Admin access required
+ */
+router.get(
+    "/",
+    authenticateToken,
+    authorizeRole("ADMIN"),
+    getAllOrders
+);
+
+/**
+ * @swagger
+ * /api/orders/my-orders:
+ *   get:
  *     summary: Get the logged-in user's orders
  *     tags: [Orders]
  *     security:
@@ -64,7 +89,7 @@ router.post(
  *         description: Authentication required
  */
 router.get(
-    "/",
+    "/my-orders",
     authenticateToken,
     getUserOrders
 );

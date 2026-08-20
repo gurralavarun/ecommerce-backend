@@ -26,6 +26,22 @@ const result = await productService.getAllProducts(req.query);
     }
 };
 
+const getProductById = async (req, res) => {
+    try {
+        const product = await productService.getProductById(
+            req.params.id
+        );
+
+        res.status(200).json({
+            product
+        });
+    } catch (error) {
+        res.status(404).json({
+            message: error.message
+        });
+    }
+};
+
 const updateProduct = async (req, res) => {
     try {
         const product = await productService.updateProduct(
@@ -80,6 +96,7 @@ const deleteProduct = async (req, res) => {
 module.exports = {
     createProduct,
     getAllProducts,
+    getProductById,
     getLowStockProducts,
     updateProduct,
     deleteProduct

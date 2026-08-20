@@ -3,6 +3,7 @@ const express = require("express");
 const {
     createProduct,
     getAllProducts,
+    getProductById,
     getLowStockProducts,
     updateProduct,
     deleteProduct
@@ -179,6 +180,34 @@ router.get(
     authenticateToken,
     authorizeRole("ADMIN"),
     getLowStockProducts
+);
+
+/**
+ * @swagger
+ * /api/products/{id}:
+ *   get:
+ *     summary: Get product by ID
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: Product retrieved successfully
+ *       400:
+ *         description: Invalid product ID
+ *       404:
+ *         description: Product not found
+ */
+router.get(
+    "/:id",
+    productIdValidation,
+    validate,
+    getProductById
 );
 
 /**

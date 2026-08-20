@@ -1,6 +1,23 @@
 const bcrypt = require("bcrypt");
 const { User } = require("../models/associations");
 
+const getProfile = async (userId) => {
+    const user = await User.findByPk(userId, {
+        attributes: ["id", "name", "email", "roleId"]
+    });
+
+    if (!user) {
+        throw new Error("User not found");
+    }
+
+    return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        roleId: user.roleId
+    };
+};
+
 const updateProfile = async (userId, userData) => {
     const { name, email } = userData;
 
@@ -141,6 +158,7 @@ const deleteUser = async (userId) => {
 };
 
 module.exports = {
+    getProfile,
     updateProfile,
     changePassword,
     deleteAccount,

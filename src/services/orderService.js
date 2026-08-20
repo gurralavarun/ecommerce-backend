@@ -5,7 +5,8 @@ const {
     CartItem,
     Product,
     Order,
-    OrderItem
+    OrderItem,
+    User
 } = require("../models/associations");
 
 const createOrder = async (userId) => {
@@ -97,6 +98,25 @@ const getUserOrders = async (userId) => {
                 attributes: ["id", "name", "imageUrl"]
             }
         },
+        order: [["createdAt", "DESC"]]
+    });
+};
+
+const getAllOrders = async () => {
+    return await Order.findAll({
+        include: [
+            {
+                model: require("../models/associations").User,
+                attributes: ["id", "name", "email"]
+            },
+            {
+                model: OrderItem,
+                include: {
+                    model: Product,
+                    attributes: ["id", "name", "imageUrl"]
+                }
+            }
+        ],
         order: [["createdAt", "DESC"]]
     });
 };
@@ -214,6 +234,7 @@ const updateOrderStatus = async (orderId, status) => {
 module.exports = {
     createOrder,
     getUserOrders,
+    getAllOrders,
     getOrderById,
     cancelOrder,
     updateOrderStatus

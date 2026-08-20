@@ -85,6 +85,21 @@ const getAllProducts = async (query) => {
     };
 };
 
+const getProductById = async (id) => {
+    const product = await Product.findByPk(id, {
+        include: {
+            model: Category,
+            attributes: ["id", "name"]
+        }
+    });
+
+    if (!product) {
+        throw new Error("Product not found");
+    }
+
+    return product;
+};
+
 const updateProduct = async (id, productData) => {
     const product = await Product.findByPk(id);
 
@@ -155,6 +170,7 @@ const deleteProduct = async (id) => {
 module.exports = {
     createProduct,
     getAllProducts,
+    getProductById,
     updateProduct,
     getLowStockProducts,
     deleteProduct
